@@ -52,17 +52,7 @@ import triangle.abstractSyntaxTrees.declarations.ProcDeclaration;
 import triangle.abstractSyntaxTrees.declarations.SequentialDeclaration;
 import triangle.abstractSyntaxTrees.declarations.UnaryOperatorDeclaration;
 import triangle.abstractSyntaxTrees.declarations.VarDeclaration;
-import triangle.abstractSyntaxTrees.expressions.ArrayExpression;
-import triangle.abstractSyntaxTrees.expressions.BinaryExpression;
-import triangle.abstractSyntaxTrees.expressions.CallExpression;
-import triangle.abstractSyntaxTrees.expressions.CharacterExpression;
-import triangle.abstractSyntaxTrees.expressions.EmptyExpression;
-import triangle.abstractSyntaxTrees.expressions.IfExpression;
-import triangle.abstractSyntaxTrees.expressions.IntegerExpression;
-import triangle.abstractSyntaxTrees.expressions.LetExpression;
-import triangle.abstractSyntaxTrees.expressions.RecordExpression;
-import triangle.abstractSyntaxTrees.expressions.UnaryExpression;
-import triangle.abstractSyntaxTrees.expressions.VnameExpression;
+import triangle.abstractSyntaxTrees.expressions.*;
 import triangle.abstractSyntaxTrees.formals.ConstFormalParameter;
 import triangle.abstractSyntaxTrees.formals.EmptyFormalParameterSequence;
 import triangle.abstractSyntaxTrees.formals.FuncFormalParameter;
@@ -117,6 +107,7 @@ import triangle.codeGenerator.entities.TypeRepresentation;
 import triangle.codeGenerator.entities.UnknownAddress;
 import triangle.codeGenerator.entities.UnknownRoutine;
 import triangle.codeGenerator.entities.UnknownValue;
+import triangle.syntacticAnalyzer.RepeatCommand;
 
 public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		ActualParameterSequenceVisitor<Frame, Integer>, ArrayAggregateVisitor<Frame, Integer>,
@@ -254,6 +245,11 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
 		}
 		return valSize;
 	}
+
+    @Override
+    public Void visitRepeatCommand(RepeatCommand ast, Frame frame) {
+        return null;
+    }
 
 	@Override
 	public Integer visitRecordExpression(RecordExpression ast, Frame frame) {

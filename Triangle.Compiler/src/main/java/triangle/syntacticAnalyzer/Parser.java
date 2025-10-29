@@ -337,6 +337,16 @@ public class Parser {
 		}
 			break;
 
+        case REPEAT: {
+            acceptIt(); // to discard the “Repeat”.
+            Command cAST = parseSingleCommand(); // parses the expression (inside the loop brackets)
+            accept(Token.Kind.UNTIL); // checks that there is an “until”
+            Expression eAST = parseExpression(); // parses the conditional statement
+            finish(commandPos); //finish() records the line number that the command ended on for debugging
+            commandAST = new WhileCommand(eAST, cAST, commandPos); // builds the AST for the Repeat
+        }
+            break;
+
 		case SEMICOLON:
 		case END:
 		case ELSE:

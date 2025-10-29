@@ -96,6 +96,7 @@ import triangle.abstractSyntaxTrees.visitors.VnameVisitor;
 import triangle.abstractSyntaxTrees.vnames.DotVname;
 import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
+import triangle.syntacticAnalyzer.RepeatCommand;
 
 public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		ActualParameterSequenceVisitor<Void, DrawingTree>, ArrayAggregateVisitor<Void, DrawingTree>,
@@ -169,6 +170,11 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		var d1 = ast.AA.visit(this);
 		return layoutUnary("ArrayExpr.", d1);
 	}
+
+    @Override
+    public DrawingTree visitRepeatCommand(RepeatCommand ast, Void unused) {
+        return null;
+    }
 
 	@Override
 	public DrawingTree visitBinaryExpression(BinaryExpression ast, Void obj) {

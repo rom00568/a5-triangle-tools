@@ -7,6 +7,8 @@ import triangle.abstractSyntaxTrees.commands.IfCommand;
 import triangle.abstractSyntaxTrees.commands.LetCommand;
 import triangle.abstractSyntaxTrees.commands.SequentialCommand;
 import triangle.abstractSyntaxTrees.commands.WhileCommand;
+import triangle.codeGenerator.Frame;
+import triangle.syntacticAnalyzer.RepeatCommand;
 
 public interface CommandVisitor<TArg, TResult> {
 
@@ -24,4 +26,5 @@ public interface CommandVisitor<TArg, TResult> {
 
 	TResult visitWhileCommand(WhileCommand ast, TArg arg);
 
+    TResult visitRepeatCommand(RepeatCommand ast, TArg arg);
 }
