@@ -191,6 +191,12 @@ public final class Checker<Frame> implements ActualParameterVisitor<FormalParame
 
     @Override
     public Void visitRepeatCommand(RepeatCommand ast, Void unused) {
+
+        var eType = ast.E.visit(this);
+
+        checkAndReportError(eType.equals(StdEnvironment.booleanType), "Boolean expression expected here", ast.E);
+        ast.C.visit(this);
+
         return null;
     }
 
@@ -938,6 +944,7 @@ public final class Checker<Frame> implements ActualParameterVisitor<FormalParame
 				StdEnvironment.booleanType);
 		StdEnvironment.notlessDecl = declareStdBinaryOp(">=", StdEnvironment.integerType, StdEnvironment.integerType,
 				StdEnvironment.booleanType);
+        StdEnvironment.barDecl = declareStdUnaryOp("|", StdEnvironment.integerType, StdEnvironment.integerType);
 
 		StdEnvironment.charDecl = declareStdType("Char", StdEnvironment.charType);
 		StdEnvironment.chrDecl = declareStdFunc("chr",
