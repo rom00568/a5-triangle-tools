@@ -1,0 +1,32 @@
+! a program that reads in to ints and prints there sum and product to the terminal, if these are the same print "Same!"
+
+let
+  func add (firstNumber: Integer, secondNumber: Integer): Integer ~
+    firstNumber + secondNumber;
+
+  func times (firstNumber: Integer, secondNumber: Integer): Integer ~
+     firstNumber * secondNumber;
+
+ var firstNumber: Integer;
+ var secondNumber: Integer;
+ var sum: Integer;
+ var product: Integer
+
+in
+  begin
+  getint (var firstNumber);
+  getint (var secondNumber);
+  sum := add(firstNumber, secondNumber);
+  product := times(firstNumber, secondNumber);
+
+  putint (sum);
+  put(' ');
+  putint (product);
+
+  if firstNumber = secondNumber then
+     begin
+     put ('S'); put ('a'); put ('m'); put ('e'); put ('!');
+     end
+  else
+    put(' ');
+  end
