@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
 
+import triangle.Compiler;
 import triangle.ErrorReporter;
 import triangle.syntacticAnalyzer.Parser;
 import triangle.syntacticAnalyzer.Scanner;
@@ -65,13 +66,11 @@ public class TestScanner {
 	public void testHiNewComment2() {
         compileExpectSuccess("/hi-newcomment2.tri");
 	}
-	
 
-	@Test
+    @Test
 	public void testBarDemo() {
         compileExpectSuccess("/bardemo.tri");
 	}
-	
 
 	@Test
 	public void testRepeatUntil() {
@@ -82,10 +81,16 @@ public class TestScanner {
     public void testAdd() {
         compileExpectSuccess("/add.tri");
     }
-	
-	
-	
-	private void compileExpectSuccess(String filename) {
+
+    @Test
+    public void testDouble()
+    {
+        compileExpectSuccess("/double.tri");
+    }
+
+
+
+    private void compileExpectSuccess(String filename) {
 		// build.gradle has a line sourceSets.test.resources.srcDir file("$rootDir/programs")
 		// which adds the programs directory to the list of places Java can easily find files
 		// getResource() below searches for a file, which is in /programs 

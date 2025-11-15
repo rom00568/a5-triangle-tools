@@ -18,6 +18,8 @@
 
 package triangle;
 
+import com.sampullara.cli.Args;
+import com.sampullara.cli.Argument;
 import triangle.abstractSyntaxTrees.Program;
 import triangle.codeGenerator.Emitter;
 import triangle.codeGenerator.Encoder;
@@ -34,10 +36,9 @@ import triangle.treeDrawer.Drawer;
 public class Compiler {
 
 	/** The filename for the object program, normally obj.tam. */
-	static String objectName = "obj.tam";
-	
-	static boolean showTree = false;
-	static boolean folding = false;
+	//static String objectName = "obj.tam";
+    //static boolean showTree = false;
+//	static boolean folding = false;
 
 	private static Scanner scanner;
 	private static Parser parser;
@@ -63,7 +64,7 @@ public class Compiler {
 	 * @return true iff the source program is free of compile-time errors, otherwise
 	 *         false.
 	 */
-	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingTable) {
+	static boolean compileProgram(String sourceName, String objectName, boolean showingAST, boolean showingTable, boolean showTreeAfterFold) {
 
 		System.out.println("********** " + "Triangle Compiler (Java Version 2.1)" + " **********");
 
@@ -91,14 +92,10 @@ public class Compiler {
 			// }
 			System.out.println("Contextual Analysis ...");
 			checker.check(theAST); // 2nd pass
-			if (showingAST) {
-				drawer.draw(theAST);
-			}
-			if (folding) {
-				theAST.visit(new ConstantFolder());
-			}
-			
-			if (reporter.getNumErrors() == 0) {
+
+            generateAppropriateTreeIfNeeded(showingAST, showTreeAfterFold);
+
+            if (reporter.getNumErrors() == 0) {
 				System.out.println("Code Generation ...");
 				encoder.encodeRun(theAST, showingTable); // 3rd pass
 			}
@@ -114,40 +111,75 @@ public class Compiler {
 		return successful;
 	}
 
-	/**
+    private static void generateAppropriateTreeIfNeeded(boolean showingAST, boolean showTreeAfterFold) {
+        if (!showTreeAfterFold)
+        {
+            if (showingAST)
+            {
+                drawer.draw(theAST); // makes the AST pop up in a window this is currently shown before folding
+            }
+        }  // In other words the code above says "do it before if the argument is false"
+        else
+        {
+            if (folding)
+            {
+            theAST.visit(new ConstantFolder());
+            drawer.draw(theAST);
+            }
+        }
+    }
+
+    /**
 	 * Triangle compiler main program.
 	 *
 	 * @param args the only command-line argument to the program specifies the
 	 *             source filename.
 	 */
-	public static void main(String[] args) {
 
-		if (args.length < 1) {
+    @Argument(alias = "fn", description = "Give a name to the file containing the compiled code (by default it is obj.tam)", required = false)
+    static String objectName = "obj.tam"; // this is the value if this is not specified.
+
+    @Argument(alias = "st", description = "Provide an instruction to show the abstract syntax tree (by default it is set to false)", required = false)
+    static boolean showTree = false;
+
+    @Argument(alias = "fo", description = "Provide an instruction to do folding (by default it is set to false)", required = false)
+    static boolean folding = false;
+
+    @Argument(alias = "taf", description = "Provide an instruction to display the abstract syntax tree after folding (by default it is set to false)", required = false)
+    static boolean showTreeAfterFold = false;
+
+    public static void main(String[] args) {
+
+        Compiler CompilerOBJ = new Compiler();
+        Args.parseOrExit(CompilerOBJ, args);
+
+        if (args.length < 1) {
 			System.out.println("Usage: tc filename [-o=outputfilename] [tree] [folding]");
 			System.exit(1);
 		}
-		
-		parseArgs(args);
 
+
+
+		//parseArgs(args);
 		String sourceName = args[0];
 		
-		var compiledOK = compileProgram(sourceName, objectName, showTree, false);
+		var compiledOK = compileProgram(sourceName, objectName, showTree, false, showTreeAfterFold);
 
 		if (!showTree) {
 			System.exit(compiledOK ? 0 : 1);
 		}
 	}
 	
-	private static void parseArgs(String[] args) {
-		for (String s : args) {
-			var sl = s.toLowerCase();
-			if (sl.equals("tree")) {
-				showTree = true;
-			} else if (sl.startsWith("-o=")) {
-				objectName = s.substring(3);
-			} else if (sl.equals("folding")) {
-				folding = true;
-			}
-		}
-	}
+//	private static void parseArgs(String[] args) {
+//		for (String s : args) {
+//			var sl = s.toLowerCase();  //for each of the arguments, save a lowercase version of it in sl
+//			if (sl.equals("tree")) { // if it equals "tree" then set show tree to tree or ...
+//				showTree = true;
+//			} else if (userIntention.equals("changeOBJName")) { //if it starts with "-o=" the objectName string is then set to the 3rd letter (inclusive) to the end
+//				objectName = s.substring(3); //for now, I have commented this out as while testing its setting the name to be things it shouldn't be
+//			} else if (sl.equals("folding")) { // if it is folding then we want to do folding
+//				 = true;
+//			}
+//		}
+//	}
 }
