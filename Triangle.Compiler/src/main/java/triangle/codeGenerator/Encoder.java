@@ -94,6 +94,7 @@ import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
 import triangle.abstractSyntaxTrees.vnames.Vname;
 import triangle.codeGenerator.entities.*;
+import triangle.syntacticAnalyzer.MiddleWhileCommand;
 import triangle.syntacticAnalyzer.RepeatCommand;
 
 public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
@@ -239,6 +240,19 @@ public final class Encoder implements ActualParameterVisitor<Frame, Integer>,
         ast.C.visit(this, frame);
         ast.E.visit(this, frame);
         emitter.emit(OpCode.JUMPIF, Machine.falseRep, Register.CB, loopAddr);
+        return null;
+    }
+
+    @Override
+    public Void visitMiddleWhileCommand(MiddleWhileCommand ast, Frame frame) {
+        // get the part of the loop that is run one more time than the logic below
+        var initalAddr = emitter.getNextInstrAddr();
+        ast.R.visit(this, frame);
+        ast.E.visit(this, frame);
+        var locationAddr = emitter.emit(OpCode.JUMPIF, Machine.falseRep, Register.CB, 0);
+        ast.C.visit(this, frame);
+        var jumpAddr = emitter.emit(OpCode.JUMP, 0, Register.CB, initalAddr);
+        emitter.patch(locationAddr);
         return null;
     }
 

@@ -79,6 +79,7 @@ import triangle.abstractSyntaxTrees.visitors.VnameVisitor;
 import triangle.abstractSyntaxTrees.vnames.DotVname;
 import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
+import triangle.syntacticAnalyzer.MiddleWhileCommand;
 import triangle.syntacticAnalyzer.RepeatCommand;
 
 public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSyntaxTree>,
@@ -507,6 +508,11 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 		}
 		return null;
 	}
+
+    @Override
+    public AbstractSyntaxTree visitMiddleWhileCommand(MiddleWhileCommand ast, Void arg) {
+        return null;
+    }
 
 	@Override
 	public AbstractSyntaxTree visitMultipleArrayAggregate(MultipleArrayAggregate ast, Void arg) {

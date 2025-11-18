@@ -107,6 +107,7 @@ import triangle.abstractSyntaxTrees.visitors.VnameVisitor;
 import triangle.abstractSyntaxTrees.vnames.DotVname;
 import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
+import triangle.syntacticAnalyzer.MiddleWhileCommand;
 import triangle.syntacticAnalyzer.RepeatCommand;
 import triangle.syntacticAnalyzer.SourcePosition;
 
@@ -197,6 +198,15 @@ public final class Checker<Frame> implements ActualParameterVisitor<FormalParame
         checkAndReportError(eType.equals(StdEnvironment.booleanType), "Boolean expression expected here", ast.E);
         ast.C.visit(this);
 
+        return null;
+    }
+
+    @Override
+    public Void visitMiddleWhileCommand(MiddleWhileCommand ast, Void unused) {
+        var eType = ast.E.visit(this); // visits the loop condition
+        checkAndReportError(eType.equals(StdEnvironment.booleanType), "Boolean expression expected here", ast.E);
+        var d1 = ast.R.visit(this); // visits the command that is to be run regardless(ish)!
+        var d3 = ast.C.visit(this); // visits the contents inside the brackets
         return null;
     }
 

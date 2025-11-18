@@ -86,6 +86,8 @@ import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
 import triangle.abstractSyntaxTrees.vnames.Vname;
 
+import java.util.ArrayList;
+
 public class Parser {
 
 	private Scanner lexicalAnalyser;
@@ -112,6 +114,23 @@ public class Parser {
 		}
 	}
 
+
+    void acceptIther(ArrayList<Token.Kind> tokenExpected) throws SyntaxError {
+        int tokenUsed = 0;
+        if (currentToken.kind == tokenExpected.get(0)) {
+            previousTokenPosition = currentToken.position;
+            currentToken = lexicalAnalyser.scan();
+        } else if (currentToken.kind == tokenExpected.get(1))
+        {
+            previousTokenPosition = currentToken.position;
+            currentToken = lexicalAnalyser.scan();
+        }
+    else{
+        String toPrint = Token.spell(tokenExpected.get(tokenUsed));
+        String alsoToPrint = Token.spell(tokenExpected.get(tokenUsed++));
+        syntacticError("\"%\" or " + alsoToPrint + " expected here",toPrint);
+    }
+    }
 	// acceptIt simply moves to the next token with no checking
 	// (used where we've already done the check)
 	
@@ -317,9 +336,14 @@ public class Parser {
 			break;
 
 		case BEGIN:
+        case LCURLY:
 			acceptIt();
 			commandAST = parseCommand();
-			accept(Token.Kind.END);
+			//accept(Token.Kind.END);
+            ArrayList<Token.Kind> kinds = new ArrayList<Token.Kind>();
+            kinds.add(Token.Kind.END);
+            kinds.add(Token.Kind.LCURLY);
+            acceptIther(kinds);
 			break;
 
 		case LET: {
@@ -331,6 +355,21 @@ public class Parser {
 			commandAST = new LetCommand(dAST, cAST, commandPos);
 		}
 			break;
+
+        case LOOP: {
+            acceptIt(); // gets rid of the word loop.
+            Command regardlessAST = parseSingleCommand(); //the logic that will run regardless(ish) of the condition.
+            accept(Token.Kind.WHILE); //to check that there is now a while
+            acceptIt(); // gets rid of the word while.
+            Expression eAST = parseExpression();
+            accept(Token.Kind.DO);// can you see the do, if you can continue.
+            //acceptIt(); // to get rid of the word do      **causes a big crash**
+            Command cAST = parseSingleCommand();
+            //Finnish and build AST
+            finish(commandPos);
+            commandAST = new MiddleWhileCommand(eAST, cAST, regardlessAST, commandPos);
+        }
+            break;
 
 		case IF: {
 			acceptIt();
@@ -369,7 +408,7 @@ public class Parser {
 		case ELSE:
 		case IN:
 		case EOT:
-
+        case RCURLY:
 			finish(commandPos);
 			commandAST = new EmptyCommand(commandPos);
 			break;

@@ -96,6 +96,7 @@ import triangle.abstractSyntaxTrees.visitors.VnameVisitor;
 import triangle.abstractSyntaxTrees.vnames.DotVname;
 import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
+import triangle.syntacticAnalyzer.MiddleWhileCommand;
 import triangle.syntacticAnalyzer.RepeatCommand;
 
 public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
@@ -177,7 +178,6 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
         var d2 = ast.C.visit(this);
         return layoutBinary("RepeatCom.", d2, d1);
     }
-
 	@Override
 	public DrawingTree visitBinaryExpression(BinaryExpression ast, Void obj) {
 		var d1 = ast.E1.visit(this);
@@ -185,6 +185,14 @@ public class LayoutVisitor implements ActualParameterVisitor<Void, DrawingTree>,
 		var d3 = ast.E2.visit(this);
 		return layoutTernary("Bin.Expr.", d1, d2, d3);
 	}
+
+    @Override
+    public DrawingTree visitMiddleWhileCommand(MiddleWhileCommand ast, Void unused) {
+        var d1 = ast.R.visit(this); // visits the command that is to be run regardless(ish)!
+        var d2 = ast.E.visit(this); // visits the loop condition
+        var d3 = ast.C.visit(this); // visits the contents inside the brackets
+        return layoutTernary("MiddleWhileCom.", d1, d2, d3);
+    }
 
 	@Override
 	public DrawingTree visitCallExpression(CallExpression ast, Void obj) {

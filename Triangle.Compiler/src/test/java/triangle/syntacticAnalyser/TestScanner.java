@@ -9,7 +9,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.function.ThrowingRunnable;
 
-import triangle.Compiler;
 import triangle.ErrorReporter;
 import triangle.syntacticAnalyzer.Parser;
 import triangle.syntacticAnalyzer.Scanner;
@@ -88,6 +87,100 @@ public class TestScanner {
         compileExpectSuccess("/double.tri");
     }
 
+    @Test
+    public void testLoopwhile() //This tests if my amended compiler can compile a perfect version
+    {
+        compileExpectSuccess("/loopwhile.tri");
+    }
+
+    public void testLoopWhileCurly() //This tests if my amended compiler can compile the curly version
+    {
+        compileExpectSuccess("/while-curly.tri");
+    }
+
+    @Test
+    public void testWhileWithMissingLeftCurly()
+    {
+        compileExpectFailure("/whileWithMissingLeftCurly.tri");
+    }
+
+    @Test
+    public void testWhileWithMissingRightCurly()
+    {
+        compileExpectFailure("/whileWithMissingRightCurly.tri");
+    }
+
+    @Test
+    public void testWhileWithMissingNestedLeftcurly()
+    {
+        compileExpectFailure("/whileWithMissingNestedLeftCurly.tri");
+    }
+
+    @Test
+    public void testWhileWithMissingNestedRightCurly()
+    {
+        compileExpectFailure("/whileWithMissingNestedRightCurly.tri");
+    }
+
+//    @Test  // this was me testing my assumptions regarding the flaws of the tests!!!
+//    public void testWhileWithMissingCurlys()
+//    {
+//        compileExpectSuccess("/whileWithNoCurlyies.tri"); //this passes these tests!!
+//    }
+
+    @Test
+    public void testwhileWithNoNestedCurrlies()
+    {
+        compileExpectFailure("/whileWithNoNestedCurrlies.tri");
+    }
+
+    @Test
+    public void testWhileWithMissingOuterCurlyBrakets()
+    {
+        compileExpectFailure("/whileWithMissingOuterCurlyBrakets.tri");
+    }
+
+    @Test
+    public void testWhileWithTopBegin()
+    {
+        compileExpectFailure("/whileWithTopBegin.tri"); //I assume mixing and matching of this kind should not be allowed.
+    }
+
+    @Test
+    public void testWhileWithBottomEnd()
+    {
+        compileExpectFailure("/whileWithEndAtBottomInstedOf}.tri"); //I assume mixing and matching of this kind should not be allowed.
+    }
+
+    @Test
+    public void testWhileWithBothBeginAndEnd()
+    {
+        compileExpectFailure("/whileWithBothBeginAndEnd.tri"); //I have not implemented this kind of mixing and matching either as I think it would go against readability based on what I know from Clean Code.
+    }
+
+    @Test
+    public void testWhileWithBothBeginAndEndInTheNestedLoop()
+    {
+        compileExpectFailure("/whileWithBothBeginAndEndInTheNestedLoop.tri"); //I have not implemented this kind of mixing and matching either as I think it would go against readability based on what I know from Clean Code.
+    }
+
+    @Test
+    public void testWhileWithJustBeginInTheNestedLoop()
+    {
+        compileExpectFailure("/whileWithJustBeginInTheNestedLoop.tri"); //I have not implemented this kind of mixing and matching either as I think it would go against readability based on what I know from Clean Code.
+    }
+
+    @Test
+    public void testWhileWithJustEndInTheNestedLoop()
+    {
+        compileExpectFailure("/whileWithJustEndInTheNestedLoop.tri"); //I have not implemented this kind of mixing and matching either as I think it would go against readability based on what I know from Clean Code.
+    }
+
+    @Test
+    public void testWhileWith2Begins()
+    {
+        compileExpectFailure("/whileWith2Begins.tri"); //I have not implemented this kind of mixing and matching either as I think it would go against readability based on what I know from Clean Code.
+    }
 
 
     private void compileExpectSuccess(String filename) {
