@@ -79,8 +79,10 @@ import triangle.abstractSyntaxTrees.visitors.VnameVisitor;
 import triangle.abstractSyntaxTrees.vnames.DotVname;
 import triangle.abstractSyntaxTrees.vnames.SimpleVname;
 import triangle.abstractSyntaxTrees.vnames.SubscriptVname;
+import triangle.abstractSyntaxTrees.vnames.Vname;
 import triangle.syntacticAnalyzer.MiddleWhileCommand;
 import triangle.syntacticAnalyzer.RepeatCommand;
+import triangle.syntacticAnalyzer.SourcePosition;
 
 public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSyntaxTree>,
 		ActualParameterSequenceVisitor<Void, AbstractSyntaxTree>, ArrayAggregateVisitor<Void, AbstractSyntaxTree>,
@@ -498,7 +500,7 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
 		return null;
 	}
 
-	// TODO uncomment if you've implemented the repeat command
+
 	@Override
 	public AbstractSyntaxTree visitRepeatCommand(RepeatCommand ast, Void arg) {
 		ast.C.visit(this);
@@ -605,13 +607,97 @@ public class ConstantFolder implements ActualParameterVisitor<Void, AbstractSynt
                 foldedValue = int1 - int2;
             }
 
+            if (o.decl == StdEnvironment.equalDecl) { // folds the "=" operator
+                if (int1 == int2)
+                {
+                    foldedValue = true;
+                }
+                else
+                {
+                    foldedValue = false;
+                }
+            }
+
+            if (o.decl == StdEnvironment.lessDecl) { // folds the "<" operator
+                if (int1 < int2)
+                {
+                    foldedValue = true;
+                }
+                else
+                {
+                    foldedValue = false;
+                }
+            }
+
+            if (o.decl == StdEnvironment.notgreaterDecl) { // folds the "<=" operator
+                if (int1 <= int2)
+                {
+                    foldedValue = true;
+                }
+                else
+                {
+                    foldedValue = false;
+                }
+            }
+
+            if (o.decl == StdEnvironment.greaterDecl) { // folds the ">" operator
+                if (int1 > int2)
+                {
+                    foldedValue = true;
+                }
+                else
+                {
+                    foldedValue = false;
+                }
+            }
+
+            if (o.decl == StdEnvironment.notlessDecl) { // folds the ">=" operator
+                if (int1 >= int2)
+                {
+                    foldedValue = true;
+                }
+                else
+                {
+                    foldedValue = false;
+                }
+            }
+
+            if (o.decl == StdEnvironment.unequalDecl) { // folds the "\=" operator
+                if (int1 != int2)
+                {
+                    foldedValue = true;
+                }
+                else
+                {
+                    foldedValue = false;
+                }
+            }
+
 			if (foldedValue instanceof Integer) {
 				IntegerLiteral il = new IntegerLiteral(foldedValue.toString(), node1.getPosition());
 				IntegerExpression ie = new IntegerExpression(il, node1.getPosition());
 				ie.type = StdEnvironment.integerType;
 				return ie;
 			} else if (foldedValue instanceof Boolean) {
-				/* currently not handled! */
+                if ((boolean) foldedValue)
+                {
+                    Identifier trueIdentifier= new Identifier("true", node1.getPosition());
+                    trueIdentifier.decl = StdEnvironment.trueDecl;
+                    Vname vAST = new SimpleVname(trueIdentifier, node1.getPosition());
+                    VnameExpression identifierContainer = new VnameExpression(vAST, node1.getPosition());
+                    identifierContainer.type = StdEnvironment.booleanType;
+                    return identifierContainer;
+                }
+                else
+                {
+                    Identifier falseIdentifier= new Identifier("false", node1.getPosition());
+                    falseIdentifier.decl = StdEnvironment.falseDecl;
+                    Vname vAST = new SimpleVname(falseIdentifier, node1.getPosition());
+                    VnameExpression identifierContainer = new VnameExpression(vAST, node1.getPosition());
+                    identifierContainer.type = StdEnvironment.booleanType;
+                    return identifierContainer;
+                }
+
 			}
 		}
 

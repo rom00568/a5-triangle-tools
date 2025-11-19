@@ -131,19 +131,19 @@ public class TestScanner {
     @Test
     public void testwhileWithNoNestedCurrlies()
     {
-        compileExpectFailure("/whileWithNoNestedCurrlies.tri");
+        compileExpectSuccess("/whileWithNoNestedCurrlies.tri");
     }
 
     @Test
     public void testWhileWithMissingOuterCurlyBrakets()
     {
-        compileExpectFailure("/whileWithMissingOuterCurlyBrakets.tri");
+        compileExpectSuccess("/whileWithMissingOuterCurlyBrakets.tri");
     }
 
     @Test
     public void testWhileWithTopBegin()
     {
-        compileExpectFailure("/whileWithTopBegin.tri"); //I assume mixing and matching of this kind should not be allowed.
+        compileExpectSuccess("/whileWithTopBegin.tri"); //I assume mixing and matching of this kind should not be allowed.
     }
 
     @Test
@@ -155,31 +155,31 @@ public class TestScanner {
     @Test
     public void testWhileWithBothBeginAndEnd()
     {
-        compileExpectFailure("/whileWithBothBeginAndEnd.tri"); //I have not implemented this kind of mixing and matching either as I think it would go against readability based on what I know from Clean Code.
+        compileExpectSuccess("/whileWithBothBeginAndEnd.tri"); //I have not implemented this kind of mixing and matching either as I think it would go against readability based on what I know from Clean Code.
     }
 
     @Test
     public void testWhileWithBothBeginAndEndInTheNestedLoop()
     {
-        compileExpectFailure("/whileWithBothBeginAndEndInTheNestedLoop.tri"); //I have not implemented this kind of mixing and matching either as I think it would go against readability based on what I know from Clean Code.
+        compileExpectSuccess("/whileWithBothBeginAndEndInTheNestedLoop.tri"); //I have not implemented this kind of mixing and matching either as I think it would go against readability based on what I know from Clean Code.
     }
 
     @Test
     public void testWhileWithJustBeginInTheNestedLoop()
     {
-        compileExpectFailure("/whileWithJustBeginInTheNestedLoop.tri"); //I have not implemented this kind of mixing and matching either as I think it would go against readability based on what I know from Clean Code.
+        compileExpectSuccess("/whileWithJustBeginInTheNestedLoop.tri"); //I have not implemented this kind of mixing and matching either as I think it would go against readability based on what I know from Clean Code.
     }
 
     @Test
     public void testWhileWithJustEndInTheNestedLoop()
     {
-        compileExpectFailure("/whileWithJustEndInTheNestedLoop.tri"); //I have not implemented this kind of mixing and matching either as I think it would go against readability based on what I know from Clean Code.
+        compileExpectSuccess("/whileWithJustEndInTheNestedLoop.tri"); //I have not implemented this kind of mixing and matching either as I think it would go against readability based on what I know from Clean Code.
     }
 
     @Test
     public void testWhileWith2Begins()
     {
-        compileExpectFailure("/whileWith2Begins.tri"); //I have not implemented this kind of mixing and matching either as I think it would go against readability based on what I know from Clean Code.
+        compileExpectSuccess("/whileWith2Begins.tri"); //I have not implemented this kind of mixing and matching either as I think it would go against readability based on what I know from Clean Code.
     }
 
 

@@ -25,6 +25,7 @@ import triangle.codeGenerator.Emitter;
 import triangle.codeGenerator.Encoder;
 import triangle.contextualAnalyzer.Checker;
 import triangle.optimiser.ConstantFolder;
+import triangle.optimiser.statisticalDataGeneratingVisitor;
 import triangle.syntacticAnalyzer.Parser;
 import triangle.syntacticAnalyzer.Scanner;
 import triangle.syntacticAnalyzer.SourceFile;
@@ -34,7 +35,6 @@ import triangle.treeDrawer.Drawer;
  * The main driver class for the Triangle compiler.
  */
 public class Compiler {
-
 	/** The filename for the object program, normally obj.tam. */
 	//static String objectName = "obj.tam";
     //static boolean showTree = false;
@@ -47,6 +47,8 @@ public class Compiler {
 	private static Emitter emitter;
 	private static ErrorReporter reporter;
 	private static Drawer drawer;
+//    public static boolean toShowStats;
+
 
 	/** The AST representing the source program. */
 	private static Program theAST;
@@ -95,6 +97,17 @@ public class Compiler {
 
             generateAppropriateTreeIfNeeded(showingAST, showTreeAfterFold);
 
+            if (toShowStats){
+            statisticalDataGeneratingVisitor getStats = new statisticalDataGeneratingVisitor();
+            getStats.visitProgram(theAST,null);
+
+            System.out.println("");
+            System.out.println("Stats:");
+            System.out.println("There are " + getStats.characterExpressionsCount + " Char expressions in " + sourceName + "!");
+            System.out.println("There are " + getStats.integerExpressionsCount + " Int expressions in " + sourceName + "!");
+            System.out.println("---------------------");
+            System.out.println("");}
+
             if (reporter.getNumErrors() == 0) {
 				System.out.println("Code Generation ...");
 				encoder.encodeRun(theAST, showingTable); // 3rd pass
@@ -112,20 +125,14 @@ public class Compiler {
 	}
 
     private static void generateAppropriateTreeIfNeeded(boolean showingAST, boolean showTreeAfterFold) {
-        if (!showTreeAfterFold)
+        if (showTreeAfterFold)
         {
-            if (showingAST)
-            {
-                drawer.draw(theAST); // makes the AST pop up in a window this is currently shown before folding
-            }
-        }  // In other words the code above says "do it before if the argument is false"
-        else
-        {
-            if (folding)
-            {
             theAST.visit(new ConstantFolder());
             drawer.draw(theAST);
-            }
+        }
+        else if (folding)
+        {
+            theAST.visit(new ConstantFolder());
         }
     }
 
@@ -147,6 +154,9 @@ public class Compiler {
 
     @Argument(alias = "taf", description = "Provide an instruction to display the abstract syntax tree after folding (by default it is set to false)", required = false)
     static boolean showTreeAfterFold = false;
+
+    @Argument(alias = "showStats", description = "Provide an instruction to display the program in questions statistics like the amount of Character and Integer (by default it is set to false)", required = false)
+    public static boolean toShowStats = false;
 
     public static void main(String[] args) {
 

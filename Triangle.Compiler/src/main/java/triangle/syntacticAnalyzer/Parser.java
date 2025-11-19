@@ -117,10 +117,10 @@ public class Parser {
 
     void acceptIther(ArrayList<Token.Kind> tokenExpected) throws SyntaxError {
         int tokenUsed = 0;
-        if (currentToken.kind == tokenExpected.get(0)) {
+        if (currentToken.kind.equals(tokenExpected.get(0))) {
             previousTokenPosition = currentToken.position;
             currentToken = lexicalAnalyser.scan();
-        } else if (currentToken.kind == tokenExpected.get(1))
+        } else if (currentToken.kind.equals(tokenExpected.get(1)))
         {
             previousTokenPosition = currentToken.position;
             currentToken = lexicalAnalyser.scan();
@@ -342,7 +342,7 @@ public class Parser {
 			//accept(Token.Kind.END);
             ArrayList<Token.Kind> kinds = new ArrayList<Token.Kind>();
             kinds.add(Token.Kind.END);
-            kinds.add(Token.Kind.LCURLY);
+            kinds.add(Token.Kind.RCURLY);
             acceptIther(kinds);
 			break;
 
@@ -360,7 +360,7 @@ public class Parser {
             acceptIt(); // gets rid of the word loop.
             Command regardlessAST = parseSingleCommand(); //the logic that will run regardless(ish) of the condition.
             accept(Token.Kind.WHILE); //to check that there is now a while
-            acceptIt(); // gets rid of the word while.
+            //acceptIt(); // gets rid of the word while.
             Expression eAST = parseExpression();
             accept(Token.Kind.DO);// can you see the do, if you can continue.
             //acceptIt(); // to get rid of the word do      **causes a big crash**
