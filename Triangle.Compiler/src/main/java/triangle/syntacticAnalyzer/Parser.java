@@ -339,7 +339,6 @@ public class Parser {
         case LCURLY:
 			acceptIt();
 			commandAST = parseCommand();
-			//accept(Token.Kind.END);
             ArrayList<Token.Kind> kinds = new ArrayList<Token.Kind>();
             kinds.add(Token.Kind.END);
             kinds.add(Token.Kind.RCURLY);
@@ -360,10 +359,8 @@ public class Parser {
             acceptIt(); // gets rid of the word loop.
             Command regardlessAST = parseSingleCommand(); //the logic that will run regardless(ish) of the condition.
             accept(Token.Kind.WHILE); //to check that there is now a while
-            //acceptIt(); // gets rid of the word while.
             Expression eAST = parseExpression();
             accept(Token.Kind.DO);// can you see the do, if you can continue.
-            //acceptIt(); // to get rid of the word do      **causes a big crash**
             Command cAST = parseSingleCommand();
             //Finnish and build AST
             finish(commandPos);

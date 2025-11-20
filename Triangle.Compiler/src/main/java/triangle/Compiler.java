@@ -158,6 +158,9 @@ public class Compiler {
     @Argument(alias = "showStats", description = "Provide an instruction to display the program in questions statistics like the amount of Character and Integer (by default it is set to false)", required = false)
     public static boolean toShowStats = false;
 
+    @Argument(alias = "hoisting", description = "Should hoisting be performed (by default it is false)", required = false)
+    static boolean hoisting = false;
+
     public static void main(String[] args) {
 
         Compiler CompilerOBJ = new Compiler();
